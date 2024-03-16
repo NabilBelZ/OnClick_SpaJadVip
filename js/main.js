@@ -1,3 +1,17 @@
+function sendMail(){
+    var params = {
+        name: "jjjjj",
+        email: document.getElementById("email").value,
+        date: document.getElementById("date").value,
+        heure: document.getElementById("heure").value,
+        service: document.getElementById("service").value
+    }
+    emailjs.send("service_km64vgk", "template_qs3k4hg", params).then(function(res) {
+        alert("Success !" + res.status);
+    })
+}
+
+
 (function ($) {
     "use strict";
     
