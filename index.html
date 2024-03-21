@@ -29,15 +29,17 @@
 
 
     <!-- script for mail -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-    </script>
-    <script type="text/javascript">
-        (function () {
-            emailjs.init({
-                publicKey: "MYvy9MrXecSp5bA1Z",
-            });
-        })();
-    </script>
+    <style>
+        .rdv {
+            margin-left: 50%;
+        }
+
+        @media (max-width: 575.98px) {
+            .rdv {
+                margin-left: 0%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -281,7 +283,7 @@
             <div class="col-lg-6 py-5">
                 <div class="p-5 my-5" style="background: rgba(33, 30, 28, 0.7);">
                     <h1 class="text-white text-center mb-4">Prendre un Rendez-vous</h1>
-                    <form>
+                    <form onsubmit="event.preventDefault(); sendEmail(event);">
                         <div class="form-row">
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -291,15 +293,23 @@
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <input id="email" type="email" class="form-control bg-transparent p-4"
-                                        placeholder="Votre Email" required="required" />
+                                    <input id="phone" type="number" class="form-control bg-transparent p-4"
+                                        placeholder="Votre Téléphone" required="required" />
                                 </div>
                             </div>
                         </div>
                         <div class="form-row">
+
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <div class="date" id="date" data-target-input="nearest">
+                                    <input id="email" type="email" class="form-control bg-transparent p-4"
+                                        placeholder="Votre Email" required="required" />
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <div class="date" id="datetimepicker" data-target-input="nearest">
                                         <input id="date" type="text"
                                             class="form-control bg-transparent p-4 datetimepicker-input"
                                             placeholder="Sélectionner une Date" data-target="#date"
@@ -307,9 +317,11 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <div class="time" id="time" data-target-input="nearest">
+                                    <div class="time" data-target-input="nearest">
                                         <input id="heure" type="text"
                                             class="form-control bg-transparent p-4 datetimepicker-input"
                                             placeholder="Sélectionner une Heure" data-target="#time"
@@ -317,11 +329,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <select id="service" class="custom-select bg-transparent px-4"
+                                    <select id="service" name="service" class="custom-select bg-transparent px-4"
                                         style="height: 47px;">
                                         <option selected>Sélectionner un Service</option>
                                         <option value="1">Service 1</option>
@@ -331,7 +341,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <button class="btn btn-primary btn-block" onclick="sendMail()"
+                                <button class="btn btn-primary btn-block rdv" type="submit"
                                     style="height: 47px;">Prendre Rendez-vous</button>
                             </div>
                         </div>
@@ -815,7 +825,41 @@
 
 
     <!-- Javascript for mail -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com/dist/email.min.js"></script>
 
+    <script>
+        emailjs.init("MYvy9MrXecSp5bA1Z");
+
+        function sendEmail(event) {
+            const name = document.getElementById('name').value;
+            const date = document.getElementById('date').value;
+            const email = document.getElementById('email').value;
+            const heure = document.getElementById('heure').value;
+            const service = document.getElementById('service').value;
+            const phone = document.getElementById('phone').value;
+
+            const templateParams = {
+                from_name: name,
+                date: date,
+                email: email,
+                heure: heure,
+                service: service,
+                phone: phone,
+                to_name: "SPA JAD VIP",
+                reply_to: email
+            };
+
+            emailjs.send("service_4g9gdhe", "template_xk2nx58", templateParams)
+                .then(function (response) {
+                    alert("Votre demande de rendez-vous a été envoyée avec succès. Nous vous répondrons dès que possible. Merci !");
+                }, function (error) {
+                    console.log('ÉCHEC...', error);
+                });
+
+            event.target.reset();
+
+        }
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
